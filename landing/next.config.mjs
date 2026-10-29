@@ -7,6 +7,6 @@ const isPages = process.env.GITHUB_PAGES === 'true';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   turbopack: { root: path.resolve(import.meta.dirname) },
-  ...(isPages && { output: 'export', basePath: '/design-library', images: { unoptimized: true } }),
+  ...(isPages && { output: 'export', basePath: '/design-library/landing', images: { unoptimized: true } }),
 };
 export default nextConfig;

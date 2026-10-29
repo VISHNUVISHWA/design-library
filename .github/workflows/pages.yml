@@ -23,13 +23,37 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run build
+          cache-dependency-path: |
+            app/package-lock.json
+            landing/package-lock.json
+
+      - name: Build the app demo
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
+        env:
+          VITE_DEMO: 'true'
+          VITE_BASE: /design-library/
+
+      - name: Build the landing page
+        working-directory: landing
+        run: |
+          npm ci
+          npm run build
         env:
           GITHUB_PAGES: 'true'
+
+      - name: Assemble the site
+        run: |
+          mkdir -p site/landing
+          cp -r app/web/dist/. site/
+          cp -r landing/out/. site/landing/
+          touch site/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: site
 
   deploy:
     needs: build
